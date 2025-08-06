@@ -1,0 +1,857 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>珍妮 - 材质模组 | Minecraft</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <script>
+        // Tailwind 配置
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        jane: {
+                            primary: '#E91E63', // 活力粉作为主色调
+                            secondary: '#F8BBD0',
+                            accent: '#FFC107',
+                            dark: '#212121',
+                            light: '#FAFAFA'
+                        }
+                    },
+                    fontFamily: {
+                        minecraft: ['"Minecraftia"', 'monospace', 'sans-serif'],
+                        sans: ['"Inter"', 'sans-serif']
+                    },
+                    animation: {
+                        'pulse-soft': 'pulse 3s cubic-bezier(0.4, 0, 0.6, 1) infinite',
+                        'bounce-slow': 'bounce 3s infinite',
+                        'float': 'float 4s ease-in-out infinite'
+                    },
+                    keyframes: {
+                        float: {
+                            '0%, 100%': { transform: 'translateY(0)' },
+                            '50%': { transform: 'translateY(-10px)' }
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+            }
+            .action-card {
+                transition: all 0.3s ease;
+            }
+            .action-card:hover {
+                transform: translateY(-5px) scale(1.02);
+                box-shadow: 0 10px 25px -5px rgba(233, 30, 99, 0.2);
+            }
+            .skin-preview {
+                transition: transform 0.5s ease;
+            }
+            .skin-preview:hover {
+                transform: rotate(5deg) scale(1.05);
+            }
+            .blocky-border {
+                box-shadow: 0 0 0 2px #333, 4px 4px 0 #333;
+            }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Minecraftia&display=swap" rel="stylesheet">
+</head>
+<body class="bg-jane-light font-sans text-gray-800">
+    <!-- 导航栏 -->
+    <nav id="navbar" class="sticky top-0 z-50 bg-jane-primary shadow-lg transition-all duration-300">
+        <div class="container mx-auto px-4">
+            <div class="flex justify-between items-center py-3">
+                <div class="flex items-center space-x-2">
+                    <img src="https://picsum.photos/id/237/50/50" alt="珍妮模组图标" class="w-10 h-10 rounded blocky-border">
+                    <span class="font-minecraft text-xl text-white">珍妮模组</span>
+                </div>
+                
+                <!-- 桌面端导航 -->
+                <div class="hidden md:flex items-center space-x-6">
+                    <a href="#overview" class="text-white hover:text-jane-accent transition-colors">概述</a>
+                    <a href="#actions" class="text-white hover:text-jane-accent transition-colors">动作系统</a>
+                    <a href="#skins" class="text-white hover:text-jane-accent transition-colors">皮肤展示</a>
+                    <a href="#download" class="text-white hover:text-jane-accent transition-colors">下载</a>
+                    <a href="#reviews" class="text-white hover:text-jane-accent transition-colors">玩家评价</a>
+                </div>
+                
+                <!-- 移动端菜单按钮 -->
+                <button id="mobile-menu-btn" class="md:hidden text-white text-2xl">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+        
+        <!-- 移动端导航菜单 -->
+        <div id="mobile-menu" class="hidden md:hidden bg-jane-primary/95 backdrop-blur-sm">
+            <div class="container mx-auto px-4 py-3 flex flex-col space-y-3">
+                <a href="#overview" class="text-white hover:text-jane-accent transition-colors py-2">概述</a>
+                <a href="#actions" class="text-white hover:text-jane-accent transition-colors py-2">动作系统</a>
+                <a href="#skins" class="text-white hover:text-jane-accent transition-colors py-2">皮肤展示</a>
+                <a href="#download" class="text-white hover:text-jane-accent transition-colors py-2">下载</a>
+                <a href="#reviews" class="text-white hover:text-jane-accent transition-colors py-2">玩家评价</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 英雄区域 -->
+    <header class="relative h-[85vh] min-h-[600px] overflow-hidden">
+        <div class="absolute inset-0 z-0">
+            <img src="https://cccimg.com/view.php/4ec62250bce9c5330bd4a4dd84145f37.jpg" alt="珍妮动作皮肤模组展示" class="w-full h-full object-cover">
+            <div class="absolute inset-0 bg-gradient-to-r from-jane-dark/80 to-jane-primary/60"></div>
+        </div>
+        
+        <div class="container mx-auto px-4 relative z-10 h-full flex flex-col justify-center">
+            <div class="max-w-3xl">
+                <div class="inline-block bg-jane-accent text-jane-dark px-4 py-1 rounded-full text-sm font-minecraft mb-4">
+                    材质模组
+                </div>
+                <h1 class="font-minecraft text-[clamp(2.5rem,6vw,4rem)] text-white text-shadow mb-6">
+                    珍妮模组
+                </h1>
+                <p class="text-[clamp(1rem,2vw,1.25rem)] text-gray-100 mb-8 max-w-xl leading-relaxed">
+                    为你的Minecraft角色带来全新的动作系统和精美皮肤，让角色动作更加流畅自然，包含超过50种独特动作和10款精心设计的皮肤。
+                </p>
+                <div class="flex flex-wrap gap-4">
+                    <a href="#download" class="bg-jane-accent text-jane-dark px-6 py-3 rounded blocky-border hover:bg-yellow-300 transition-colors font-minecraft">
+                        立即下载
+                    </a>
+                    <a href="#actions" class="bg-transparent border-2 border-white text-white px-6 py-3 rounded blocky-border hover:bg-white/10 transition-colors font-minecraft">
+                        查看动作
+                    </a>
+                </div>
+                
+                <div class="flex flex-wrap items-center gap-6 mt-10">
+                    <div class="flex items-center">
+                        <div class="flex text-jane-accent mr-2">
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                            <i class="fa fa-star"></i>
+                        </div>
+                        <span class="text-white font-medium">5.0/5</span>
+                    </div>
+                    <div class="flex items-center text-white">
+                        <i class="fa fa-download mr-2"></i>
+                        <span>1.2M+ 下载</span>
+                    </div>
+                    <div class="flex items-center text-white">
+                        <i class="fa fa-calendar mr-2"></i>
+                        <span>最近更新: 2025-11-20</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </header>
+
+    <!-- 版本信息栏 -->
+    <section class="py-4 bg-jane-dark text-white">
+        <div class="container mx-auto px-4">
+            <div class="flex flex-wrap items-center justify-between">
+                <div class="flex items-center gap-4 mb-2 md:mb-0">
+                    <span>支持版本:</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-jane-primary/30 px-3 py-1 rounded text-sm">1.12.2</span>
+                        <!-- <span class="bg-jane-primary/30 px-3 py-1 rounded text-sm">1.19.4</span>
+                        <span class="bg-jane-primary/30 px-3 py-1 rounded text-sm">1.18.2</span>
+                        <span class="bg-jane-primary/30 px-3 py-1 rounded text-sm"> ... </span> -->
+                    </div>
+                </div>
+                <div class="flex items-center gap-4">
+                    <span>支持加载器:</span>
+                    <div class="flex flex-wrap gap-2">
+                        <span class="bg-blue-500/30 px-3 py-1 rounded text-sm">java</span>
+                        <!-- <span class="bg-orange-500/30 px-3 py-1 rounded text-sm">Forge</span> -->
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 概述部分 -->
+    <section id="overview" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-10 items-center">
+                <div>
+                    <h2 class="font-minecraft text-[clamp(1.5rem,3vw,2.5rem)] text-jane-primary mb-6">模组概述</h2>
+                    <p class="text-gray-700 mb-4 leading-relaxed">
+                        珍妮动作皮肤模组彻底改变了Minecraft角色的动画系统，引入了流畅自然的动作和精美的自定义皮肤。无论是行走、跳跃、攻击还是互动，每个动作都经过精心设计，让你的角色更加生动。
+                    </p>
+                    <p class="text-gray-700 mb-6 leading-relaxed">
+                        模组包含10款独特设计的珍妮皮肤，每款皮肤都有配套的专属动作，从优雅的舞蹈到凌厉的战斗动作，为你的游戏体验增添更多乐趣和个性。
+                    </p>
+                    
+                    <div class="grid grid-cols-2 sm:grid-cols-3 gap-4 mb-6">
+                        <div class="bg-jane-secondary/30 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-jane-primary mb-1">50+</div>
+                            <div class="text-sm text-gray-600">独特动作</div>
+                        </div>
+                        <div class="bg-jane-secondary/30 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-jane-primary mb-1">10</div>
+                            <div class="text-sm text-gray-600">精美皮肤</div>
+                        </div>
+                        <div class="bg-jane-secondary/30 rounded-lg p-4 text-center">
+                            <div class="text-2xl font-bold text-jane-primary mb-1">4K</div>
+                            <div class="text-sm text-gray-600">高清纹理</div>
+                        </div>
+                    </div>
+                    
+                    <div class="flex items-center gap-4">
+                        <a href="#" class="flex items-center gap-2 bg-red-600 text-white px-4 py-2 rounded hover:bg-red-700 transition-colors">
+                            <i class="fa fa-youtube-play"></i>
+                            <span>观看动作演示</span>
+                        </a>
+                        <a href="#" class="flex items-center gap-2 bg-jane-primary text-white px-4 py-2 rounded hover:bg-pink-600 transition-colors">
+                            <i class="fa fa-image"></i>
+                            <span>浏览皮肤库</span>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="relative">
+                    <div class="bg-white rounded-lg overflow-hidden shadow-xl border-4 border-jane-primary/20 p-1">
+                        <img src="https://cccimg.com/view.php/06f256c99c2cfc560a2d600c92a61479.jpg" alt="珍妮皮肤展示" class="w-3/3 h-auto rounded skin-preview mx-auto">
+                    </div>
+                    
+                    <!-- 装饰元素 -->
+                    <div class="absolute -top-6 -right-6 w-16 h-16 bg-jane-accent rounded-full animate-pulse-soft opacity-70"></div>
+                    <div class="absolute -bottom-4 -left-4 w-12 h-12 bg-jane-primary rounded-full animate-float opacity-70"></div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 动作系统 -->
+    <section id="actions" class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-16">
+                <h2 class="font-minecraft text-[clamp(1.5rem,3vw,2.5rem)] text-jane-primary mb-4">动作系统</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">超过50种精心设计的动作，让你的角色更加生动</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+                <!-- 动作类型 1 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md action-card">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://cccimg.com/view.php/e948d78213c28de3833e2a83c435491a.jpg" alt="日常图片" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-minecraft text-lg text-jane-primary mb-2">日常图片</h3>
+                        <p class="text-gray-600 text-sm mb-3">这是《我的世界》（Minecraft）风格的角色珍妮，方块化建模搭配独特服饰，在温馨木屋场景里，呈现出别样的日常氛围感 。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <!-- <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">行走动画</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">跳跃效果</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">游泳姿态</span> -->
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 动作类型 2 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md action-card">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/1002/600/400" alt="战斗动作" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-minecraft text-lg text-jane-primary mb-2">战斗动作</h3>
+                        <p class="text-gray-600 text-sm mb-3">各种武器的攻击动作，包括挥砍、刺击、射击等，每种武器都有独特动作。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">近战攻击</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">远程射击</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">魔法施法</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 动作类型 3 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md action-card">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/1003/600/400" alt="互动动作" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-minecraft text-lg text-jane-primary mb-2">互动动作</h3>
+                        <p class="text-gray-600 text-sm mb-3">与环境互动的专属动作，包括采矿、种植、烹饪、阅读等多种场景。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">资源采集</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">物品使用</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">社交互动</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 动作类型 4 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md action-card">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/1004/600/400" alt="表情动作" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-minecraft text-lg text-jane-primary mb-2">表情动作</h3>
+                        <p class="text-gray-600 text-sm mb-3">各种情绪表达和趣味动作，包括挥手、跳舞、庆祝等，适合多人互动。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">情绪表达</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">舞蹈动作</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">庆祝姿态</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 动作类型 5 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md action-card">
+                    <div class="h-48 overflow-hidden">
+                        <img src="https://picsum.photos/id/1006/600/400" alt="特殊动作" class="w-full h-full object-cover">
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-minecraft text-lg text-jane-primary mb-2">特殊动作</h3>
+                        <p class="text-gray-600 text-sm mb-3">独特的技能和能力展示动作，包括冲刺、闪避、格挡等战斗技巧。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">战斗技巧</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">移动技能</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">特殊能力</span>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 动作控制 -->
+                <div class="bg-white rounded-lg overflow-hidden shadow-md action-card">
+                    <div class="h-48 overflow-hidden bg-jane-primary/10 flex items-center justify-center">
+                        <i class="fa fa-gamepad text-6xl text-jane-primary/70"></i>
+                    </div>
+                    <div class="p-5">
+                        <h3 class="font-minecraft text-lg text-jane-primary mb-2">动作控制</h3>
+                        <p class="text-gray-600 text-sm mb-3">通过简单的快捷键组合触发各种动作，支持自定义按键和动作优先级设置。</p>
+                        <div class="flex flex-wrap gap-2">
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">按键自定义</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">优先级设置</span>
+                            <span class="bg-jane-secondary/30 text-jane-primary text-xs px-2 py-1 rounded">动作队列</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 皮肤展示 -->
+    <section id="skins" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="font-minecraft text-[clamp(1.5rem,3vw,2.5rem)] text-jane-primary mb-4">精美皮肤</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">10款精美设计的珍妮皮肤，每款都有专属动作和风格</p>
+            </div>
+            
+            <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-5 gap-6">
+                <!-- 皮肤 1 -->
+                <div class="text-center group">
+                    <div class="bg-gray-100 rounded-lg p-3 mb-3 transform transition-transform group-hover:scale-110">
+                        <img src="https://picsum.photos/id/1011/300/400" alt="默认珍妮皮肤" class="w-full h-auto rounded">
+                    </div>
+                    <h3 class="font-minecraft text-gray-800">默认珍妮</h3>
+                    <p class="text-sm text-gray-500">经典风格</p>
+                </div>
+                
+                <!-- 皮肤 2 -->
+                <div class="text-center group">
+                    <div class="bg-gray-100 rounded-lg p-3 mb-3 transform transition-transform group-hover:scale-110">
+                        <img src="https://picsum.photos/id/1012/300/400" alt="冒险珍妮皮肤" class="w-full h-auto rounded">
+                    </div>
+                    <h3 class="font-minecraft text-gray-800">冒险珍妮</h3>
+                    <p class="text-sm text-gray-500">探险风格</p>
+                </div>
+                
+                <!-- 皮肤 3 -->
+                <div class="text-center group">
+                    <div class="bg-gray-100 rounded-lg p-3 mb-3 transform transition-transform group-hover:scale-110">
+                        <img src="https://picsum.photos/id/1013/300/400" alt="战斗珍妮皮肤" class="w-full h-auto rounded">
+                    </div>
+                    <h3 class="font-minecraft text-gray-800">战斗珍妮</h3>
+                    <p class="text-sm text-gray-500">武士风格</p>
+                </div>
+                
+                <!-- 皮肤 4 -->
+                <div class="text-center group">
+                    <div class="bg-gray-100 rounded-lg p-3 mb-3 transform transition-transform group-hover:scale-110">
+                        <img src="https://picsum.photos/id/1014/300/400" alt="魔法珍妮皮肤" class="w-full h-auto rounded">
+                    </div>
+                    <h3 class="font-minecraft text-gray-800">魔法珍妮</h3>
+                    <p class="text-sm text-gray-500">巫师风格</p>
+                </div>
+                
+                <!-- 皮肤 5 -->
+                <div class="text-center group">
+                    <div class="bg-gray-100 rounded-lg p-3 mb-3 transform transition-transform group-hover:scale-110">
+                        <img src="https://picsum.photos/id/1015/300/400" alt="科技珍妮皮肤" class="w-full h-auto rounded">
+                    </div>
+                    <h3 class="font-minecraft text-gray-800">科技珍妮</h3>
+                    <p class="text-sm text-gray-500">未来风格</p>
+                </div>
+            </div>
+            
+            <div class="text-center mt-10">
+                <a href="#" class="inline-block bg-jane-primary text-white px-6 py-3 rounded blocky-border hover:bg-pink-600 transition-colors font-minecraft">
+                    查看全部10款皮肤
+                </a>
+            </div>
+            
+            <!-- 皮肤定制功能 -->
+            <div class="mt-16 bg-gray-50 rounded-lg p-8">
+                <h3 class="font-minecraft text-2xl text-jane-primary mb-6 text-center">皮肤定制功能</h3>
+                
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div class="bg-white p-5 rounded-lg shadow-md text-center">
+                        <div class="w-14 h-14 bg-jane-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-paint-brush text-2xl text-jane-primary"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-2">颜色调整</h4>
+                        <p class="text-sm text-gray-600">自定义皮肤各部分的颜色，打造独一无二的外观</p>
+                    </div>
+                    
+                    <div class="bg-white p-5 rounded-lg shadow-md text-center">
+                        <div class="w-14 h-14 bg-jane-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-plus-square text-2xl text-jane-primary"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-2">配件系统</h4>
+                        <p class="text-sm text-gray-600">添加帽子、眼镜、披风等配件，丰富角色形象</p>
+                    </div>
+                    
+                    <div class="bg-white p-5 rounded-lg shadow-md text-center">
+                        <div class="w-14 h-14 bg-jane-primary/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                            <i class="fa fa-refresh text-2xl text-jane-primary"></i>
+                        </div>
+                        <h4 class="font-medium text-gray-800 mb-2">动态切换</h4>
+                        <p class="text-sm text-gray-600">游戏中随时切换皮肤和动作风格，无需重启</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 下载区域 -->
+    <section id="download" class="py-16 bg-gradient-to-r from-jane-dark to-jane-primary text-white">
+        <div class="container mx-auto px-4">
+            <div class="max-w-4xl mx-auto text-center mb-12">
+                <h2 class="font-minecraft text-[clamp(1.5rem,3vw,2.5rem)] mb-4">下载珍妮动作皮肤模组</h2>
+                <p class="text-gray-200 max-w-2xl mx-auto">选择适合你游戏版本和加载器的模组文件</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6 max-w-4xl mx-auto">
+                <!-- Fabric 版本 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 transform transition-all hover:-translate-y-2 hover:shadow-lg hover:shadow-jane-primary/20">
+                    <div class="text-center mb-4">
+                        <span class="inline-block bg-blue-500 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">Fabric</span>
+                        <h3 class="font-minecraft text-xl">支持版本</h3>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <span class="bg-white/20 px-2 py-1 rounded text-sm">1.20.1</span>
+                            <span class="bg-white/20 px-2 py-1 rounded text-sm">1.19.4</span>
+                            <span class="bg-white/20 px-2 py-1 rounded text-sm">1.18.2</span>
+                        </div>
+                    </div>
+                    <ul class="text-left text-gray-200 text-sm space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>需要 Fabric API 支持</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>包含完整动作和皮肤</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>支持皮肤定制功能</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="block w-full bg-blue-500 text-white text-center px-4 py-3 rounded blocky-border hover:bg-blue-600 transition-colors font-minecraft">
+                        下载Fabric版
+                    </a>
+                </div>
+                
+                <!-- Forge 版本 -->
+                <div class="bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20 transform transition-all hover:-translate-y-2 hover:shadow-lg hover:shadow-jane-primary/20">
+                    <div class="text-center mb-4">
+                        <span class="inline-block bg-orange-500 text-white px-3 py-1 rounded-full text-sm font-bold mb-2">Forge</span>
+                        <h3 class="font-minecraft text-xl">支持版本</h3>
+                        <div class="flex justify-center gap-2 mt-2">
+                            <span class="bg-white/20 px-2 py-1 rounded text-sm">1.20.1</span>
+                            <span class="bg-white/20 px-2 py-1 rounded text-sm">1.19.4</span>
+                            <span class="bg-white/20 px-2 py-1 rounded text-sm">1.18.2</span>
+                        </div>
+                    </div>
+                    <ul class="text-left text-gray-200 text-sm space-y-2 mb-6">
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>独立安装，无需额外API</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>包含完整动作和皮肤</span>
+                        </li>
+                        <li class="flex items-start">
+                            <i class="fa fa-check text-green-400 mt-1 mr-2"></i>
+                            <span>支持皮肤定制功能</span>
+                        </li>
+                    </ul>
+                    <a href="#" class="block w-full bg-orange-500 text-white text-center px-4 py-3 rounded blocky-border hover:bg-orange-600 transition-colors font-minecraft">
+                        下载Forge版
+                    </a>
+                </div>
+            </div>
+            
+            <div class="max-w-3xl mx-auto mt-12 bg-white/10 backdrop-blur-sm rounded-lg p-6 border border-white/20">
+                <h3 class="font-minecraft text-xl text-center mb-4">安装教程</h3>
+                <div class="text-left text-gray-200 space-y-4">
+                    <div class="flex">
+                        <div class="w-8 h-8 bg-jane-primary rounded-full flex items-center justify-center flex-shrink-0 mr-4 mt-1">1</div>
+                        <div>
+                            <p class="font-medium">安装对应加载器</p>
+                            <p class="text-sm text-gray-300">根据你选择的版本，安装Fabric或Forge加载器。Fabric用户还需要安装Fabric API。</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-8 h-8 bg-jane-primary rounded-full flex items-center justify-center flex-shrink-0 mr-4 mt-1">2</div>
+                        <div>
+                            <p class="font-medium">下载模组文件</p>
+                            <p class="text-sm text-gray-300">从上方选择适合你游戏版本的模组文件并下载。</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-8 h-8 bg-jane-primary rounded-full flex items-center justify-center flex-shrink-0 mr-4 mt-1">3</div>
+                        <div>
+                            <p class="font-medium">安装模组</p>
+                            <p class="text-sm text-gray-300">将下载的.jar文件放入Minecraft的mods文件夹中，可通过启动器快速访问。</p>
+                        </div>
+                    </div>
+                    <div class="flex">
+                        <div class="w-8 h-8 bg-jane-primary rounded-full flex items-center justify-center flex-shrink-0 mr-4 mt-1">4</div>
+                        <div>
+                            <p class="font-medium">启用皮肤</p>
+                            <p class="text-sm text-gray-300">启动游戏后，在模组设置中选择珍妮皮肤并配置动作偏好，开始使用。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 玩家评价 -->
+    <section id="reviews" class="py-16 bg-white">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="font-minecraft text-[clamp(1.5rem,3vw,2.5rem)] text-jane-primary mb-4">玩家评价</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">看看其他玩家对珍妮动作皮肤模组的评价</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+                <!-- 评价 1 -->
+                <div class="bg-gray-50 rounded-lg p-6 shadow-md">
+                    <div class="flex text-jane-accent mb-3">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "动作设计得太流畅了！相比原版动画有了巨大提升，皮肤也非常精美。我特别喜欢战斗时的动作效果，让战斗体验提升了一个档次。"
+                    </p>
+                    <div class="flex items-center">
+                        <img src="https://picsum.photos/id/1025/100/100" alt="玩家头像" class="w-10 h-10 rounded-full object-cover mr-3">
+                        <div>
+                            <div class="font-medium text-gray-800">游戏达人</div>
+                            <div class="text-sm text-gray-500">2025-11-15</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 评价 2 -->
+                <div class="bg-gray-50 rounded-lg p-6 shadow-md">
+                    <div class="flex text-jane-accent mb-3">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "10款皮肤各有特色，我最喜欢魔法珍妮的设计。动作系统非常丰富，尤其是表情动作在多人游戏中特别有趣，和朋友互动时充满乐趣。"
+                    </p>
+                    <div class="flex items-center">
+                        <img src="https://picsum.photos/id/1026/100/100" alt="玩家头像" class="w-10 h-10 rounded-full object-cover mr-3">
+                        <div>
+                            <div class="font-medium text-gray-800">皮肤收藏家</div>
+                            <div class="text-sm text-gray-500">2025-11-10</div>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- 评价 3 -->
+                <div class="bg-gray-50 rounded-lg p-6 shadow-md">
+                    <div class="flex text-jane-accent mb-3">
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star"></i>
+                        <i class="fa fa-star-half-o"></i>
+                    </div>
+                    <p class="text-gray-700 mb-4 italic">
+                        "整体非常棒，动作流畅，皮肤精美。唯一的小缺点是偶尔会和某些动作模组有冲突，但开发者更新很及时，很快就修复了问题。强烈推荐！"
+                    </p>
+                    <div class="flex items-center">
+                        <img src="https://picsum.photos/id/1027/100/100" alt="玩家头像" class="w-10 h-10 rounded-full object-cover mr-3">
+                        <div>
+                            <div class="font-medium text-gray-800">模组爱好者</div>
+                            <div class="text-sm text-gray-500">2025-11-05</div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- <div class="text-center mt-10">
+                <a href="#" class="inline-block bg-white border-2 border-jane-primary text-jane-primary px-6 py-3 rounded blocky-border hover:bg-jane-primary hover:text-white transition-colors font-minecraft">
+                    查看所有评价
+                </a>
+            </div> -->
+        </div>
+    </section>
+
+    <!-- 常见问题 -->
+    <section class="py-16 bg-gray-50">
+        <div class="container mx-auto px-4">
+            <div class="text-center mb-12">
+                <h2 class="font-minecraft text-[clamp(1.5rem,3vw,2.5rem)] text-jane-primary mb-4">常见问题</h2>
+                <p class="text-gray-600 max-w-2xl mx-auto">关于珍妮动作皮肤模组的常见问题解答</p>
+            </div>
+            
+            <div class="max-w-3xl mx-auto">
+                <div class="space-y-4">
+                    <!-- 问题 1 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+                            <span class="font-medium text-gray-800">这个模组会影响游戏性能吗？</span>
+                            <i class="fa fa-chevron-down text-jane-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-5 pb-5">
+                            <p class="text-gray-600">模组经过优化，对性能影响很小。在中等配置的电脑上可以流畅运行。如果遇到性能问题，可以在模组设置中降低动画质量或减少同时播放的动作数量。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 问题 2 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+                            <span class="font-medium text-gray-800">可以和其他皮肤模组一起使用吗？</span>
+                            <i class="fa fa-chevron-down text-jane-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-5 pb-5">
+                            <p class="text-gray-600">可以，但可能会有兼容性问题。建议将珍妮模组的加载优先级设为最高，以确保动作系统正常工作。如果遇到皮肤显示问题，可以在设置中禁用冲突的模组。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 问题 3 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+                            <span class="font-medium text-gray-800">如何修改动作的触发按键？</span>
+                            <i class="fa fa-chevron-down text-jane-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-5 pb-5">
+                            <p class="text-gray-600">在游戏内打开模组设置界面（默认按键为J），选择"按键绑定"选项卡，可以自定义每个动作的触发按键。你也可以设置动作优先级，避免按键冲突。</p>
+                        </div>
+                    </div>
+                    
+                    <!-- 问题 4
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+                            <span class="font-medium text-gray-800">未来会添加更多皮肤和动作吗？</span>
+                            <i class="fa fa-chevron-down text-jane-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-5 pb-5">
+                            <p class="text-gray-600">是的，开发者计划每月更新，添加新的皮肤和动作。你可以在模组的Discord社区投票选择下一个要添加的皮肤主题，也可以提交自己的创意和建议。</p>
+                        </div>
+                    </div> -->
+                    
+                    <!-- 问题 5 -->
+                    <div class="bg-white rounded-lg shadow-md overflow-hidden">
+                        <button class="faq-toggle w-full text-left p-5 flex justify-between items-center focus:outline-none">
+                            <span class="font-medium text-gray-800">可以在服务器中使用这个模组吗？</span>
+                            <i class="fa fa-chevron-down text-jane-primary transition-transform duration-300"></i>
+                        </button>
+                        <div class="faq-content hidden px-5 pb-5">
+                            <p class="text-gray-600">可以，但需要服务器也安装相同版本的模组。所有玩家都需要安装模组才能看到动作效果，否则只能看到默认皮肤和动作。建议在服务器公告中提醒玩家安装。</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 订阅区域 -->
+    <section class="py-16 bg-jane-primary">
+        <div class="container mx-auto px-4">
+            <div class="max-w-3xl mx-auto text-center">
+                <h2 class="font-minecraft text-[clamp(1.5rem,3vw,2.5rem)] text-white mb-4">获取最新更新</h2>
+                <p class="text-gray-100 mb-8">订阅我们的通讯，第一时间获取新皮肤、新动作和版本更新信息</p>
+                
+                <form class="flex flex-col sm:flex-row gap-3 max-w-lg mx-auto">
+                    <input type="email" placeholder="输入你的邮箱地址" class="flex-grow px-4 py-3 rounded focus:outline-none focus:ring-2 focus:ring-jane-accent">
+                    <button type="submit" class="bg-jane-accent text-jane-dark px-6 py-3 rounded blocky-border hover:yellow-300 transition-colors font-minecraft whitespace-nowrap">
+                        立即订阅
+                    </button>
+                </form>
+                
+                <p class="text-gray-200 text-sm mt-4">我们尊重你的隐私，不会向第三方分享你的信息</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="bg-jane-dark text-gray-300 py-12">
+        <div class="container mx-auto px-4">
+            <div class="grid grid-cols-1 md:grid-cols-4 gap-8 mb-8">
+                <div>
+                    <div class="flex items-center space-x-2 mb-4">
+                        <img src="https://picsum.photos/id/237/50/50" alt="珍妮模组图标" class="w-8 h-8 rounded blocky-border">
+                        <span class="font-minecraft text-white">珍妮动作皮肤</span>
+                    </div>
+                    <p class="text-sm mb-4">为Minecraft带来流畅的动作系统和精美的自定义皮肤，提升你的游戏体验。</p>
+                    <div class="flex space-x-4">
+                        <a href="#" class="text-gray-400 hover:text-jane-accent transition-colors">
+                            <i class="fa fa-twitter"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-jane-accent transition-colors">
+                            <i class="fa fa-youtube-play"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-jane-accent transition-colors">
+                            <i class="fa fa-discord"></i>
+                        </a>
+                        <a href="#" class="text-gray-400 hover:text-jane-accent transition-colors">
+                            <i class="fa fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div>
+                    <h3 class="font-minecraft text-white mb-4">快速链接</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#overview" class="hover:text-jane-accent transition-colors">模组概述</a></li>
+                        <li><a href="#actions" class="hover:text-jane-accent transition-colors">动作系统</a></li>
+                        <li><a href="#skins" class="hover:text-jane-accent transition-colors">皮肤展示</a></li>
+                        <li><a href="#download" class="hover:text-jane-accent transition-colors">下载模组</a></li>
+                        <li><a href="#reviews" class="hover:text-jane-accent transition-colors">玩家评价</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-minecraft text-white mb-4">资源</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">安装教程</a></li>
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">皮肤制作指南</a></li>
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">动作定制教程</a></li>
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">常见问题</a></li>
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">兼容性列表</a></li>
+                    </ul>
+                </div>
+                
+                <div>
+                    <h3 class="font-minecraft text-white mb-4">支持</h3>
+                    <ul class="space-y-2 text-sm">
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">报告问题</a></li>
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">功能建议</a></li>
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">联系我们</a></li>
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">社区论坛</a></li>
+                        <li><a href="#" class="hover:text-jane-accent transition-colors">支持开发者</a></li>
+                    </ul>
+                </div>
+            </div>
+            
+            <div class="border-t border-gray-700 pt-8 text-center text-sm">
+                <p>&copy; <span id="footer-year"></span> 珍妮动作皮肤模组 | 版权所有</p>
+                <p class="mt-2">Minecraft 是 Mojang AB 的商标，本模组与Mojang AB无关联</p>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // 页面加载完成后执行
+        document.addEventListener('DOMContentLoaded', function() {
+            // 设置当前年份
+            document.getElementById('footer-year').textContent = new Date().getFullYear();
+            
+            // 移动端菜单切换
+            const mobileMenuBtn = document.getElementById('mobile-menu-btn');
+            const mobileMenu = document.getElementById('mobile-menu');
+            
+            mobileMenuBtn.addEventListener('click', function() {
+                mobileMenu.classList.toggle('hidden');
+            });
+            
+            // 平滑滚动
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    const targetId = this.getAttribute('href');
+                    const targetElement = document.querySelector(targetId);
+                    
+                    if (targetElement) {
+                        window.scrollTo({
+                            top: targetElement.offsetTop - 70,
+                            behavior: 'smooth'
+                        });
+                        
+                        // 关闭移动菜单
+                        if (!mobileMenu.classList.contains('hidden')) {
+                            mobileMenu.classList.add('hidden');
+                        }
+                    }
+                });
+            });
+            
+            // 导航栏滚动效果
+            const navbar = document.getElementById('navbar');
+            window.addEventListener('scroll', function() {
+                if (window.scrollY > 100) {
+                    navbar.classList.add('py-2');
+                    navbar.classList.remove('py-3');
+                } else {
+                    navbar.classList.add('py-3');
+                    navbar.classList.remove('py-2');
+                }
+            });
+            
+            // FAQ 折叠功能
+            const faqToggles = document.querySelectorAll('.faq-toggle');
+            
+            faqToggles.forEach(toggle => {
+                toggle.addEventListener('click', function() {
+                    const content = this.nextElementSibling;
+                    const icon = this.querySelector('i');
+                    
+                    // 切换当前FAQ的显示状态
+                    content.classList.toggle('hidden');
+                    icon.classList.toggle('rotate-180');
+                    
+                    // 关闭其他打开的FAQ
+                    faqToggles.forEach(otherToggle => {
+                        if (otherToggle !== toggle) {
+                            const otherContent = otherToggle.nextElementSibling;
+                            const otherIcon = otherToggle.querySelector('i');
+                            
+                            if (!otherContent.classList.contains('hidden')) {
+                                otherContent.classList.add('hidden');
+                                otherIcon.classList.remove('rotate-180');
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+</body>
+</html>
+    
